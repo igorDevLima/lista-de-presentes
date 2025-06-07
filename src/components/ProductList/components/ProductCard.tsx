@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {CardStyled} from "./styles.ts";
+import { ReserveButton, StyledProductCard} from "./styles.ts";
 import {Button, Card, Col, Drawer, Form, Input} from 'antd';
 import type {Product} from '../../../types/Product';
 import {currencyFormat} from "../../../utils/currencyFormat.ts";
@@ -9,9 +9,10 @@ import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
 interface ProductCardProps {
     product: Product;
     loading?: boolean;
+    onReserve: (uuid: Product['uuid'], people_name: string) => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({product, loading}) => {
+export const ProductCard: React.FC<ProductCardProps> = ({product, loading, onReserve}) => {
     const [open, setOpen] = useState(false);
     const [name, setName] = useState('');
     const screens = useBreakpoint();
@@ -29,31 +30,40 @@ export const ProductCard: React.FC<ProductCardProps> = ({product, loading}) => {
     };
 
     const handleNameSubmit = async () => {
-        await form.validateFields().then(() => {
-            console.log(`Nome da pessoa: ${name}`);
+        await form.validateFields().then((value) => {
+            onReserve(product.uuid, value.people_name)
             onClose();
         })
     };
 
     return (
         <Col span={8} style={{maxWidth: '300px'}} key={'product-' + product.uuid}>
-            <CardStyled
+            <StyledProductCard
                 loading={loading}
-                style={{width: 240, cursor: 'initial'}}
                 hoverable={!loading}
-                cover={<ImageWithSkeleton alt={product.title} src={product.image_url}
-                />}
+                cover={
+                    <ImageWithSkeleton
+                        alt={product.title}
+                        src={product.image_url}
+                        height={200}
+                        style={{ objectFit: 'cover' }}
+                    />
+                }
                 actions={[
-                    <Button type="primary" onClick={showDrawer}>
+                    <ReserveButton
+                        type="primary"
+                        onClick={showDrawer}
+                        disabled={loading}
+                    >
                         Reservar
-                    </Button>
+                    </ReserveButton>
                 ]}
             >
-                <Card.Meta title={product.title}
-                           description={currencyFormat(product.price)
-                           }
+                <Card.Meta
+                    title={product.title}
+                    description={currencyFormat(product.price)}
                 />
-            < /CardStyled>
+            </StyledProductCard>
             <Drawer
                 title="Confirmação de Reserva"
                 placement={drawerPlacement}
