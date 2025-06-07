@@ -16,6 +16,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({product, loading}) => {
     const [name, setName] = useState('');
     const screens = useBreakpoint();
 
+    const [form] = Form.useForm();
+
     const drawerPlacement = screens.xs ? 'bottom' : 'right';
 
     const showDrawer = () => {
@@ -26,13 +28,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({product, loading}) => {
         setOpen(false);
     };
 
-    const handleNameSubmit = () => {
-        if (!name.trim()) {
-            message.warning('Por favor, digite seu nome');
-            return;
-        }
-        console.log(`Nome da pessoa: ${name}`);
-        onClose();
+    const handleNameSubmit = async () => {
+        await form.validateFields().then(() => {
+            console.log(`Nome da pessoa: ${name}`);
+            onClose();
+        })
     };
 
     return (
@@ -71,12 +71,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({product, loading}) => {
                 }
             >
                 <Form
+                    form={form}
                     name="layout-multiple-horizontal"
                     layout="vertical"
                     labelCol={{span: 4}}
                     wrapperCol={{span: 20}}
                 >
-                    <Form.Item label="Nome Completo" name="horizontal" rules={[{required: true}]}>
+                    <Form.Item label="Nome Completo" name="people_name" rules={[{required: true, message: 'Campo obrigatório'}]}>
                         <Input
                             placeholder="Ex.: Fulano da Silva"
                             value={name}
