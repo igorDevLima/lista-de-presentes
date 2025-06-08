@@ -1,4 +1,4 @@
-import {Button, Card} from "antd";
+import {Button, Card, Form} from "antd";
 import styled, {css} from "styled-components";
 import theme from "../../../styles/theme.ts";
 
@@ -121,12 +121,17 @@ export const ReserveButton = styled(Button)`
     font-weight: 500;
 
     ${props => props.disabled && css`
-    && {
-      background-color: ${theme.colors.gray['100']};
-      border-color: ${theme.colors.gray['300']};
-      color: ${theme.colors.gray['500']};
-      cursor: not-allowed;
-      text-decoration: line-through;
-    }
-  `}
+        && {
+            background-color: ${theme.colors.gray['100']};
+            border-color: ${theme.colors.gray['300']};
+            color: ${theme.colors.gray['500']};
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+    `}
 `;
+
+export const ProductFormItem = styled(Form.Item)`
+    .ant-col-4 {
+        max-width: none;
+    }`

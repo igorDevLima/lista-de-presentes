@@ -31,8 +31,8 @@ function App() {
 
                     </Header>
 
-                    <Content style={{padding: '20px'}}>
-                        <Space direction="vertical" style={{textAlign: 'center'}}>
+                    <Content style={{padding: '20px'}} >
+                        <Space direction="vertical" style={{width: '100%',textAlign: 'center'}}>
                             <Typography.Title level={3} style={{margin: 0}}>
                                 Queridos padrinhos
                             </Typography.Title>
