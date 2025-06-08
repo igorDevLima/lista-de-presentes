@@ -1,10 +1,10 @@
 import React, {useState} from "react";
-import { ReserveButton, StyledProductCard} from "./styles.ts";
+import {ReserveButton, StyledProductCard} from "./styles.ts";
 import {Button, Card, Col, Drawer, Form, Input} from 'antd';
 import type {Product} from '../../../types/Product';
 import {currencyFormat} from "../../../utils/currencyFormat.ts";
-import {ImageWithSkeleton} from "../../ImageWithSkeleton";
 import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
+import {Image} from "../../Image";
 
 interface ProductCardProps {
     product: Product;
@@ -36,26 +36,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({product, loading, onRes
         })
     };
 
+    const isDisabled = product.available === 0;
+
     return (
         <Col span={8} style={{maxWidth: '300px'}} key={'product-' + product.uuid}>
             <StyledProductCard
                 loading={loading}
-                hoverable={!loading}
+                hoverable={!loading && !isDisabled}
+                $isDisabled={isDisabled}
                 cover={
-                    <ImageWithSkeleton
+                    <Image
+                        loading={'lazy'}
                         alt={product.title}
                         src={product.image_url}
                         height={200}
-                        style={{ objectFit: 'cover' }}
+
                     />
                 }
                 actions={[
                     <ReserveButton
                         type="primary"
                         onClick={showDrawer}
-                        disabled={loading}
-                    >
-                        Reservar
+                        disabled={loading || isDisabled}>
+                        {isDisabled ? 'Indisponível' : 'Reservar'}
                     </ReserveButton>
                 ]}
             >
@@ -87,7 +90,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({product, loading, onRes
                     labelCol={{span: 4}}
                     wrapperCol={{span: 20}}
                 >
-                    <Form.Item label="Nome Completo" name="people_name" rules={[{required: true, message: 'Campo obrigatório'}]}>
+                    <Form.Item label="Nome Completo" name="people_name"
+                               rules={[{required: true, message: 'Campo obrigatório'}]}>
                         <Input
                             placeholder="Ex.: Fulano da Silva"
                             value={name}
