@@ -1,4 +1,4 @@
-import {Button, Card, Form} from "antd";
+import {Button, Card, Form, Result, Tag} from "antd";
 import styled, {css} from "styled-components";
 import theme from "../../../styles/theme.ts";
 
@@ -135,3 +135,43 @@ export const ProductFormItem = styled(Form.Item)`
     .ant-col-4 {
         max-width: none;
     }`
+
+export const QuantityIndicator = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #666;
+`;
+
+export const PeopleQuantityTag = styled(Tag)`
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    background: ${theme.colors.lavender['500']}
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 0 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+export const CardContainer = styled.div`
+  position: relative;
+  padding-top: 16px;
+`;
+
+export const AvailabilityText = styled.span<{ $isLow: boolean }>`
+  color: ${props => props.$isLow ? '#ff4d4f' : '#52c41a'};
+  font-weight: 500;
+`;
+
+export const ResultStyled = styled(Result)`
+
+    .ant-result-title{
+        color: ${theme.colors.gray['700']};
+    }
+`

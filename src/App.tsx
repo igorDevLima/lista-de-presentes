@@ -60,7 +60,7 @@ function App() {
                             uuid: 'test2',
                             title: 'Teste',
                             price: 5000,
-                            people_quantity: 1,
+                            people_quantity: 2,
                             available: 1,
                             description: undefined,
                             image_url: 'https://usrwtizwuzeavrdjdogz.supabase.co/storage/v1/object/public/casamento//grill.webp'
@@ -76,7 +76,7 @@ function App() {
                             uuid: 'test4',
                             title: 'Teste',
                             price: 250,
-                            people_quantity: 1,
+                            people_quantity: 5,
                             available: 1,
                             description: undefined,
                             image_url: 'https://usrwtizwuzeavrdjdogz.supabase.co/storage/v1/object/public/casamento//grill.webp'

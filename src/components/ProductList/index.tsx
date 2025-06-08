@@ -2,6 +2,7 @@ import React, {Fragment} from 'react';
 import {Flex} from 'antd';
 import type {Product} from '../../types/Product';
 import {ProductCard} from "./components/ProductCard.tsx";
+import type {ReservationResponse} from '../../types/ReservationResponse.ts';
 
 interface ProductListProps {
     products: Product[];
@@ -13,7 +14,7 @@ export const ProductList: React.FC<ProductListProps> = ({products, loading = fal
         <Flex gap={20} align={'flex-start'} justify={'center'} wrap={'wrap'}>
             {products.map((product) => (
                 <ProductCard product={product} key={'product-card-' + product.uuid} loading={loading}
-                             onReserve={function (uuid: Product['uuid'], people_name: string): void {
+                             onReserve={function (uuid: Product['uuid'], people_name: string): Promise<ReservationResponse> {
                                  throw new Error('Function not implemented.');
                              }}/>
             ))
