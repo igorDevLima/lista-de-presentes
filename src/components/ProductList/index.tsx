@@ -3,20 +3,22 @@ import {Flex} from 'antd';
 import type {Product} from '../../types/Product';
 import {ProductCard} from "./components/ProductCard.tsx";
 import type {ReservationResponse} from '../../types/ReservationResponse.ts';
+import Title from "antd/lib/typography/Title";
 
-interface ProductListProps {
-    products: Product[];
+export interface ProductListProps {
+    products: Product[] | null;
     loading?: boolean;
+    onReserve: (uuid: Product['uuid'], people_name: string) => Promise<ReservationResponse>;
+    fetchProducts: () => Promise<Product[]>;
 }
 
-export const ProductList: React.FC<ProductListProps> = ({products, loading = false}) => {
+export const ProductList: React.FC<ProductListProps> = ({products, loading = false, onReserve, fetchProducts}) => {
     return <Fragment>
         <Flex gap={20} align={'flex-start'} justify={'center'} wrap={'wrap'}>
-            {products.map((product) => (
-                <ProductCard product={product} key={'product-card-' + product.uuid} loading={loading}
-                             onReserve={function (uuid: Product['uuid'], people_name: string): Promise<ReservationResponse> {
-                                 throw new Error('Function not implemented.');
-                             }}/>
+            {!products && !loading ? <Title>Sem dados</Title> : products?.map((product) => (
+                <ProductCard product={product} key={'product-card-' + product.uuid} fetchProducts={fetchProducts}
+                             loading={loading}
+                             onReserve={onReserve}/>
             ))
             }
         </Flex>

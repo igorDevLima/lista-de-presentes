@@ -1,12 +1,30 @@
-import {Divider, Layout, Space,Typography} from "antd";
+import {Divider, Layout, Space, Typography} from "antd";
 import {ProductList} from "./components/ProductList";
 import {Content, Header,} from "antd/es/layout/layout";
 import {Image} from "./components/Image";
 import {GlobalStyles} from "./styles/global.ts";
 import {CustomThemeProvider} from "./providers/ThemeProvider.tsx";
 import {AntProvider} from "./providers/Ant.tsx";
+import {useFetch} from "./hooks/useFetch.ts";
+import type {Product} from "./types/Product.ts";
+import {useEffect} from "react";
+import type {ReservationResponse} from "./types/ReservationResponse.ts";
 
 function App() {
+    const {data, isLoading, fetchData} = useFetch<Product[]>();
+    const {fetchData: fetchReservationData} = useFetch<ReservationResponse>();
+
+    const fetchProducts = async () => await fetchData('https://usrwtizwuzeavrdjdogz.supabase.co/functions/v1/get-product')
+
+    const reserveProduct = async (product: string, people_name: string) => await fetchReservationData('https://usrwtizwuzeavrdjdogz.supabase.co/functions/v1/create-reservation' + '?product_uuid=' + product, {
+        method: 'POST',
+        body: JSON.stringify({people_name})
+    })
+
+
+    useEffect(() => {
+        fetchProducts()
+    }, [])
 
     return (
         <AntProvider>
@@ -31,8 +49,8 @@ function App() {
 
                     </Header>
 
-                    <Content style={{padding: '20px'}} >
-                        <Space direction="vertical" style={{width: '100%',textAlign: 'center'}}>
+                    <Content style={{padding: '20px'}}>
+                        <Space direction="vertical" style={{width: '100%', textAlign: 'center'}}>
                             <Typography.Title level={3} style={{margin: 0}}>
                                 Queridos padrinhos
                             </Typography.Title>
@@ -45,42 +63,14 @@ function App() {
                             }}>
                                 Esta lista é apenas uma sugestão. Ficaremos igualmente felizes
                                 com qualquer outro presente que venham a nos oferecer!
+                                < br/>
+                                Reserve o presente abaixo, ou caso prefira ou não consiga, mande mensagem para um dos
+                                noivos.
                             </Typography.Text>
                         </Space>
                         <Divider/>
-                        <ProductList loading={false} products={[{
-                            uuid: 'test',
-                            title: 'Teste',
-                            price: 250,
-                            people_quantity: 1,
-                            available: 1,
-                            description: undefined,
-                            image_url: 'https://usrwtizwuzeavrdjdogz.supabase.co/storage/v1/object/public/casamento//grill.webp'
-                        }, {
-                            uuid: 'test2',
-                            title: 'Teste',
-                            price: 5000,
-                            people_quantity: 2,
-                            available: 1,
-                            description: undefined,
-                            image_url: 'https://usrwtizwuzeavrdjdogz.supabase.co/storage/v1/object/public/casamento//grill.webp'
-                        }, {
-                            uuid: 'test3',
-                            title: 'Teste',
-                            price: 250,
-                            people_quantity: 1,
-                            available: 0,
-                            description: undefined,
-                            image_url: 'https://usrwtizwuzeavrdjdogz.supabase.co/storage/v1/object/public/casamento//grill.webp'
-                        }, {
-                            uuid: 'test4',
-                            title: 'Teste',
-                            price: 250,
-                            people_quantity: 5,
-                            available: 1,
-                            description: undefined,
-                            image_url: 'https://usrwtizwuzeavrdjdogz.supabase.co/storage/v1/object/public/casamento//grill.webp'
-                        }]}/>
+                        <ProductList loading={isLoading} products={data}
+                                     onReserve={reserveProduct} fetchProducts={fetchProducts}/>
                     </Content>
                 </Layout>
             </CustomThemeProvider>

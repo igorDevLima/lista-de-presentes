@@ -11,22 +11,23 @@ import type {Product} from '../../../types/Product';
 import {currencyFormat} from "../../../utils/currencyFormat.ts";
 import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
 import {Image} from "../../Image";
-import type {ReservationResponse} from "../../../types/ReservationResponse.ts";
+import type {ProductListProps} from "../index.tsx";
+import {FlowerSpinner} from "../../Spinner";
 
-interface ProductCardProps {
+interface ProductCardProps extends Pick<ProductListProps, 'onReserve' | 'fetchProducts'> {
     product: Product;
     loading?: boolean;
-    onReserve: (uuid: Product['uuid'], people_name: string) => Promise<ReservationResponse>;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({product, loading, onReserve}) => {
+export const ProductCard: React.FC<ProductCardProps> = ({product, loading, onReserve, fetchProducts}) => {
     const [open, setOpen] = useState(false);
     const [name, setName] = useState('');
     const [result, setResult] = useState<{
         title: string,
-        subtitle: string,
+        subTitle: string,
         status: 'success' | 'error'
     } | undefined>(undefined);
+    const [isLoading, setIsLoading] = useState(false);
 
     const screens = useBreakpoint();
 
@@ -40,22 +41,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({product, loading, onRes
 
     const onClose = () => {
         setOpen(false);
+        setResult(undefined)
     };
+
 
     const handleNameSubmit = async () => {
         await form.validateFields().then(async (value) => {
             try {
+                setIsLoading(true);
                 const reserve = await onReserve(product.uuid, value.people_name)
 
-                const subtitle = `Querido(a) ${reserve.people_name}, nosso coração está cheio de gratidão por você!\n
-${reserve.others.length > 1
+                await fetchProducts()
+
+                const subTitle = `Querido(a) ${reserve.people_name}, nosso coração está cheio de gratidão por você!\n
+${reserve.others.length > 0
                     ? `Este presente é um símbolo do amor que vocês, nossos amados padrinhos, têm por nós. Por favor, entre em contato com ${reserve.others.join(', ')} para combinarmos os detalhes. Se precisar de ajuda para entrar em contato com eles, é só nos avisar - ficaremos felizes em ajudar!`
                     : 'Muito obrigado por este gesto de carinho que guardaremos para sempre em nossos corações!'}\n
 Com todo nosso amor,\nOs Noivos`;
 
-                setResult({status: 'success', subtitle: subtitle, title: 'Reserva feita com sucesso!'});
+                setResult({status: 'success', subTitle: subTitle, title: 'Reserva feita com sucesso!'});
             } catch (error) {
-                setResult({status: 'error', subtitle: String(error), title: 'Não foi possível fazer sua reserva'})
+                setResult({status: 'error', subTitle: String(error), title: 'Não foi possível fazer sua reserva'})
+            } finally {
+                setIsLoading(false);
             }
         })
     };
@@ -114,6 +122,7 @@ Com todo nosso amor,\nOs Noivos`;
                 title="Confirmação de Reserva"
                 placement={drawerPlacement}
                 onClose={onClose}
+                size={'large'}
                 open={open}
                 {...(!result && {
                     footer:
@@ -135,24 +144,28 @@ Com todo nosso amor,\nOs Noivos`;
                             <Button onClick={onClose} key="buy">Voltar</Button>,
                         ]}
                     />
-                    :
-                    <Form
-                        form={form}
-                        name="layout-multiple-horizontal"
-                        layout="vertical"
-                        labelCol={{span: 4}}
-                        wrapperCol={{span: 20}}
-                    >
-                        <ProductFormItem label="Nome Completo" name="people_name"
-                                         rules={[{required: true, message: 'Campo obrigatório'}]}>
-                            <Input
-                                placeholder="Ex.: Fulano da Silva"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                                onPressEnter={handleNameSubmit}
-                            />
-                        </ProductFormItem>
-                    </Form>}
+                    : isLoading
+                        ? (
+                            <FlowerSpinner/>
+                        )
+                        :
+                        <Form
+                            form={form}
+                            name="layout-multiple-horizontal"
+                            layout="vertical"
+                            labelCol={{span: 4}}
+                            wrapperCol={{span: 20}}
+                        >
+                            <ProductFormItem label="Nome Completo" name="people_name"
+                                             rules={[{required: true, message: 'Campo obrigatório'}]}>
+                                <Input
+                                    placeholder="Ex.: Fulano da Silva"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    onPressEnter={handleNameSubmit}
+                                />
+                            </ProductFormItem>
+                        </Form>}
 
 
             </Drawer>
