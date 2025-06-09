@@ -14,7 +14,7 @@ export interface ProductListProps {
 
 export const ProductList: React.FC<ProductListProps> = ({products, loading = false, onReserve, fetchProducts}) => {
     return <Fragment>
-        <Flex gap={20} align={'flex-start'} justify={'center'} wrap={'wrap'}>
+        <Flex gap={30} align={'flex-start'} justify={'center'} wrap={'wrap'}>
             {!products && !loading ? <Title>Sem dados</Title> : products?.map((product) => (
                 <ProductCard product={product} key={'product-card-' + product.uuid} fetchProducts={fetchProducts}
                              loading={loading}

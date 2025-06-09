@@ -169,6 +169,6 @@ Com todo nosso amor,\nOs Noivos`;
 
 
             </Drawer>
-        < /CardContainer>
+        </CardContainer>
     )
 }
