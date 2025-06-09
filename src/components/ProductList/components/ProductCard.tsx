@@ -6,7 +6,7 @@ import {
     ReserveButton, ResultStyled,
     StyledProductCard
 } from "./styles.ts";
-import {Button, Card, Col, Drawer, Form, Input, Result, Tooltip} from 'antd';
+import {Button, Card, Drawer, Form, Input} from 'antd';
 import type {Product} from '../../../types/Product';
 import {currencyFormat} from "../../../utils/currencyFormat.ts";
 import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
