@@ -1,4 +1,4 @@
-import {Button, Card, Form, Result, Tag} from "antd";
+import {Button, Card, Form, Result} from "antd";
 import styled, {css} from "styled-components";
 import theme from "../../../styles/theme.ts";
 
@@ -136,28 +136,14 @@ export const ProductFormItem = styled(Form.Item)`
         max-width: none;
     }`
 
-export const PeopleQuantityTag = styled(Tag)`
-    position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-    background: ${theme.colors.lavender['500']}
-    color: white;
-    font-weight: bold;
-    border-radius: 10px;
-    padding: 0 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
-
 export const CardContainer = styled.div`
-  position: relative;
-  padding-top: 16px;
+    position: relative;
+    padding-top: 16px;
 `;
 
 export const ResultStyled = styled(Result)`
 
-    .ant-result-title{
+    .ant-result-title {
         color: ${theme.colors.gray['700']};
     }
 `
