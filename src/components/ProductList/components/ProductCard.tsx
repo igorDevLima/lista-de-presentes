@@ -1,14 +1,12 @@
 import React, {useState} from "react";
 import {
-    AvailabilityText,
-    CardContainer, PeopleQuantityTag,
-    ProductFormItem, QuantityIndicator,
+    CardContainer,
+    ProductFormItem,
     ReserveButton, ResultStyled,
     StyledProductCard
 } from "./styles.ts";
 import {Button, Card, Drawer, Form, Input} from 'antd';
 import type {Product} from '../../../types/Product';
-import {currencyFormat} from "../../../utils/currencyFormat.ts";
 import useBreakpoint from "antd/es/grid/hooks/useBreakpoint";
 import {Image} from "../../Image";
 import type {ProductListProps} from "../index.tsx";
@@ -54,9 +52,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({product, loading, onRes
                 await fetchProducts()
 
                 const subTitle = `Querido(a) ${reserve.people_name}, nosso coração está cheio de gratidão por você!\n
-${reserve.others.length > 0
-                    ? `Este presente é um símbolo do amor que vocês, nossos amados padrinhos, têm por nós. Por favor, entre em contato com ${reserve.others.join(', ')} para combinarmos os detalhes. Se precisar de ajuda para entrar em contato com eles, é só nos avisar - ficaremos felizes em ajudar!`
-                    : 'Muito obrigado por este gesto de carinho que guardaremos para sempre em nossos corações!'}\n
+Muito obrigado por este gesto de carinho que guardaremos para sempre em nossos corações!\n
 Com todo nosso amor,\nOs Noivos`;
 
                 setResult({status: 'success', subTitle: subTitle, title: 'Reserva feita com sucesso!'});
@@ -68,18 +64,10 @@ Com todo nosso amor,\nOs Noivos`;
         })
     };
 
-    const isDisabled = product.available === 0;
-
-    const showAvailability = product.people_quantity > 1;
-    const isLowAvailability = showAvailability && product.available <= 1;
+    const isDisabled = !product.available;
 
     return (
         <CardContainer>
-            {showAvailability && (
-                <PeopleQuantityTag>
-                    {product.people_quantity} {product.people_quantity > 1 ? 'pessoas' : 'pessoa'}
-                </PeopleQuantityTag>
-            )}
             <StyledProductCard
                 loading={loading}
                 hoverable={!loading && !isDisabled}
@@ -105,24 +93,13 @@ Com todo nosso amor,\nOs Noivos`;
             >
                 <Card.Meta
                     title={product.title}
-                    description={<>
-                        {currencyFormat(product.price / product.people_quantity)}
-                        {showAvailability && (
-                            <QuantityIndicator>
-                                <span>Disponível: </span>
-                                <AvailabilityText $isLow={isLowAvailability}>
-                                    {product.available} pessoa{product.available !== 1 ? 's' : ''}
-                                </AvailabilityText>
-                            </QuantityIndicator>
-                        )}
-                    </>}
                 />
             </StyledProductCard>
             <Drawer
                 title="Confirmação de Reserva"
                 placement={drawerPlacement}
                 onClose={onClose}
-                size={'large'}
+                size={result ? 'large' : 'default'}
                 open={open}
                 {...(!result && {
                     footer:

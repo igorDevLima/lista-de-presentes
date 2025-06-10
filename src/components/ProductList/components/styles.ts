@@ -136,15 +136,6 @@ export const ProductFormItem = styled(Form.Item)`
         max-width: none;
     }`
 
-export const QuantityIndicator = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 8px;
-    font-size: 13px;
-    color: #666;
-`;
-
 export const PeopleQuantityTag = styled(Tag)`
     position: absolute;
     top: -10px;
@@ -162,11 +153,6 @@ export const PeopleQuantityTag = styled(Tag)`
 export const CardContainer = styled.div`
   position: relative;
   padding-top: 16px;
-`;
-
-export const AvailabilityText = styled.span<{ $isLow: boolean }>`
-  color: ${props => props.$isLow ? '#ff4d4f' : '#52c41a'};
-  font-weight: 500;
 `;
 
 export const ResultStyled = styled(Result)`
